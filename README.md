@@ -6,6 +6,11 @@ PS3 SOUNDLIB is a set of libraries to play PCM voices, MP3 and OGG files, using 
 It uses PSL1GHT and install the libraries in PSL1GHT/lib, C Header files
 in PSL1GHT/include and SPU module in PSL1GHT/modules to work
 
+- Voices can be in 8 and 16 bits (signed) format, Mono or Stereo.
+
+- Voices can adjust a delay time, left and right volume, and can be one shot, infinite or updated with one callbak 
+(to work in double buffer)
+
 Credits
 -------
 
