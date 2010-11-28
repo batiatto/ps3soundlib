@@ -62,6 +62,11 @@ DEPENDS	:= $(OFILES:.o=.d)
 
 $(PSL1GHT)/modules/spu_soundmodule.bin: $(OUTPUT).elf
 	@cp $< $@
+	@mkdir -p lib
+	@$(RAW2H) $@ lib/$(notdir $@).h lib/$(notdir $@).S  $(notdir $(basename $@)_bin)
+	@ppu-as -mcell lib/$(notdir $@).S -o lib/$(notdir $@).o
+	@ppu-ar -rcs $@.a lib/$(notdir $@).o
+	@cp lib/*.h $(dir $@)
 
 $(OUTPUT).elf: $(OFILES)
 $(OFILES): $(BINFILES)

@@ -27,7 +27,7 @@ License
 Environment
 -----------
 
-    spu_soundmodule.bin -> SPU Module. Frequency converter / mixer of 16 voices
+    spu_soundmodule.bin               -> SPU Module. Frequency converter / mixer of 16 voices
 
     libspu_sound.a   / spu_soundlib.h -> Sound Voices management
 
@@ -43,14 +43,14 @@ NOTE1: spu_soundlib.h and audioplayer.h contain the functions descriptions
 
 NOTE2: spu_sound uses a background thread to work with the SPU
 
-NOTE3: audioplayer uses other background voice to play MP3/OGG files (except when you uses Decode function
+NOTE3: audioplayer uses other background voice to play MP3/OGG files (except when you uses Decode function)
 
 Building
 --------
 
 You need the environment variable $PSL1GHT defined
 
-    cd ps3soundlib/lib
+    cd ps3soundlib/libs
     make
     
 It makes and install SPU module, libs and includes

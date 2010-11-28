@@ -10,7 +10,8 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data source/../../resources
-LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lsysmodule -laudioplayer -lmpg123 -logg -lspu_sound -laudio -lm
+LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lsysmodule -laudioplayer -lmpg123 -logg -lspu_sound -laudio -lm \
+            $(PSL1GHT)/modules/spu_soundmodule.bin.a
 
 TITLE		:=	Sample1 - SOUNDLIB
 APPID		:=	SNDS00001
@@ -30,17 +31,20 @@ export DEPSDIR	:=	$(BUILDDIR)
 CFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.c)))
 CXXFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.S)))
-BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin))) \
-				$(PSL1GHT)/modules/spu_soundmodule.bin
+BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
+VCGFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.vcg)))
 
 export OFILES	:=	$(CFILES:.c=.o) \
 					$(CXXFILES:.cpp=.o) \
-					$(SFILES:.S=.o)
+					$(SFILES:.S=.o) \
+					$(BINFILES:.bin=.bin.o) \
+					$(VCGFILES:.vcg=.vcg.o)
 
 export BINFILES	:=	$(BINFILES:.bin=.bin.h)
+export VCGFILES	:=	$(VCGFILES:.vcg=.vcg.h)
 
 export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
-					-I$(CURDIR)/$(BUILD)
+					-I$(CURDIR)/$(BUILD) -I$(PSL1GHT)/modules
 
 .PHONY: $(BUILD) clean
 
@@ -70,7 +74,7 @@ DEPENDS	:= $(OFILES:.o=.d)
 
 $(OUTPUT).self: $(OUTPUT).elf
 $(OUTPUT).elf: $(OFILES)
-$(OFILES): $(BINFILES)
+$(OFILES): $(BINFILES) $(VCGFILES)
 
 -include $(DEPENDS)
 
