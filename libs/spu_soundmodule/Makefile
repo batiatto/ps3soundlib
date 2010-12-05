@@ -17,11 +17,11 @@ CXXFLAGS	:=	-g -O2 -Wall
 LDFLAGS		:=	
 
 PREFIX		:= spu-
-AR			:= $(PREFIX)ar
-AS			:= $(PREFIX)gcc
-CC			:= $(PREFIX)gcc
-CXX			:= $(PREFIX)g++
-LD			:= $(CC)
+AR		:= $(PREFIX)ar
+AS		:= $(PREFIX)gcc
+CC		:= $(PREFIX)gcc
+CXX		:= $(PREFIX)g++
+LD		:= $(CC)
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
@@ -49,24 +49,24 @@ export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@mkdir -p $(PSL1GHT)/modules
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@[ -d lib ] || mkdir -p lib
+	@$(RAW2H) $(TARGET).elf lib/$(TARGET).h lib/$(TARGET).S $(TARGET)_bin
+	@ppu-as -mcell lib/$(TARGET).S -o lib/$(TARGET).o
+	@ppu-ar -rcs $(TARGET).a lib/$(TARGET).o
+
+install: $(OUTPUT).elf
+	@[ -d $(PSL1GHT)/modules ] || mkdir -p $(PSL1GHT)/modules
+	@cp lib/*.h $(PSL1GHT)/modules
+	@cp $< $(PSL1GHT)/modules/$(TARGET)
 
 clean:
 	@echo Clean...
-	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).a
+	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).a lib
 
 else
 
 DEPENDS	:= $(OFILES:.o=.d)
-
-$(PSL1GHT)/modules/spu_soundmodule.bin: $(OUTPUT).elf
-	@cp $< $@
-	@mkdir -p lib
-	@$(RAW2H) $@ lib/$(notdir $@).h lib/$(notdir $@).S  $(notdir $(basename $@)_bin)
-	@ppu-as -mcell lib/$(notdir $@).S -o lib/$(notdir $@).o
-	@ppu-ar -rcs $@.a lib/$(notdir $@).o
-	@cp lib/*.h $(dir $@)
 
 $(OUTPUT).elf: $(OFILES)
 $(OFILES): $(BINFILES)
